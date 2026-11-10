@@ -31,14 +31,40 @@ def bfs(graph, start, target):
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1]}
         bfs(graph, 0, 3) returns [0, 1, 3]
     """
-    # TODO: Implement BFS
-    # Hints:
-    # - Use a queue (deque) to track nodes to visit
-    # - Track visited nodes to avoid cycles
-    # - Track parent pointers to reconstruct path
-    # - Return path from start to target as a list
-    
-    pass
+    # Handle invalid users
+    if start not in graph or target not in graph:
+        return []
+
+    if start == target:
+        return [start]
+
+    # Initialize queue and tracking structures
+    queue = deque([start])
+    visited = {start}
+    parent = {start: None}
+
+    # Explore the graph
+    while queue:
+        current = queue.popleft()
+
+        for friend in graph[current]:
+            if friend not in visited:
+                visited.add(friend)
+                parent[friend] = current
+
+                if friend == target:
+                    path = []
+                    node = target
+
+                    while node is not None:
+                        path.append(node)
+                        node = parent[node]
+
+                    return path[::-1]
+
+                queue.append(friend)
+
+    return []
 
 
 # ============================================================================
@@ -60,13 +86,27 @@ def dfs(graph, start):
         graph = {0: [1, 2], 1: [0, 3], 2: [0], 3: [1], 4: [5], 5: [4]}
         dfs(graph, 0) returns {0, 1, 2, 3}
     """
-    # TODO: Implement DFS
-    # Hints:
-    # - Use recursion or a stack to explore deeply
-    # - Track visited nodes to avoid infinite loops
-    # - Return a set of all reachable user IDs
-    
-    pass
+    # Handle invalid starting user
+    if start not in graph:
+        return set()
+
+    # Initialize stack and visited users
+    stack = [start]
+    visited = set()
+
+    # Explore the network
+    while stack:
+        current = stack.pop()
+
+        if current not in visited:
+            visited.add(current)
+
+            # Add unvisited friends to the stack
+            for friend in graph[current]:
+                if friend not in visited:
+                    stack.append(friend)
+
+    return visited
 
 
 # ============================================================================
